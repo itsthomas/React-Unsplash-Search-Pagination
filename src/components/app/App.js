@@ -46,7 +46,6 @@ class App extends Component {
         console.log("query from state", this.state.query);
         console.log("perPage from state", this.state.perPage);
         console.log("currentPage from state", this.state.currentPage);
-        console.log("Page inside App", this.props.page);
         console.log("Page inside App", this.state.currentPage);
         console.log("---------------------");
       })
