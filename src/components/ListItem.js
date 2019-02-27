@@ -34,6 +34,7 @@ import React from "react";
 // }
 
 const ListItem = ({ photo }) => {
+  // destructuring
   return (
     <div key={photo.id} className="grid__item card">
       <div className="card__body">

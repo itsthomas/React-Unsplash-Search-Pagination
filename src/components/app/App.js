@@ -5,19 +5,26 @@ import SearchBar from "../SearchBar";
 import ListItem from "../ListItem";
 import "./app.scss";
 
+const LOAD_STATE = {
+  SUCCESS: "SUCCESS",
+  ERROR: "ERROR",
+  LOADING: "LOADING"
+};
+
 class App extends Component {
   state = {
     photos: [],
     totalPhotos: 0,
     perPage: 30,
     currentPage: 1,
-    query: null
+    query: null,
+    loadState: LOAD_STATE.LOADING
   };
 
   // Uncomment if you want that the page loads with a default search query
-  // componentDidMount() {
-  //   this.fetchPhotos("gorilla", this.state.currentPage);
-  // }
+  componentDidMount() {
+    this.fetchPhotos("gorilla", this.state.currentPage);
+  }
 
   fetchPhotos = (inputValue, page = 1) => {
     const baseUrl = "https://api.unsplash.com/search/photos";
@@ -33,6 +40,8 @@ class App extends Component {
       }
     };
 
+    this.setState({ loadState: LOAD_STATE.LOADING });
+
     axios
       .get(baseUrl, options)
       .then(response => {
@@ -40,7 +49,8 @@ class App extends Component {
           photos: response.data.results,
           totalPhotos: parseInt(response.headers["x-total"]),
           currentPage: page,
-          query: inputValue
+          query: inputValue,
+          loadState: LOAD_STATE.SUCCESS
         });
 
         console.log("query from state", this.state.query);
@@ -51,6 +61,7 @@ class App extends Component {
       })
       .catch(() => {
         console.log("Error");
+        this.setState({ loadState: LOAD_STATE.ERROR });
       });
   };
 
@@ -66,7 +77,11 @@ class App extends Component {
           // Here we pass two arguments to fetchPhotos. page coming from Pagination & query from App
           onPageChanged={page => this.fetchPhotos(this.state.query, page)}
         />
-        <List data={this.state.photos} />
+        {this.state.loadState === LOAD_STATE.LOADING ? (
+          <div className="loader" />
+        ) : (
+          <List data={this.state.photos} />
+        )}
       </div>
     );
   }
