@@ -101,6 +101,7 @@ class Pagination extends Component {
 
         <div className="pagination__right">
           <span
+            role="button"
             className={!this.hasNext() ? "hidden" : ""}
             onClick={e => this.changePage(this.nextPage())}
           >
